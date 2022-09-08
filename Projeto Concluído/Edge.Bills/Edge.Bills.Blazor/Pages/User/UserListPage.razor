@@ -1,0 +1,43 @@
+﻿@inherits BasePage
+@page "/user_list"
+@using Edge.Bills.Blazor.Components.User
+
+<PageTitle>Usuários</PageTitle>
+
+@if (_loading)
+{
+    <span>Carregando...</span>
+}
+else
+{
+    <nav class="nav nav-pills flex-column flex-sm-row">
+        <a class="nav-link" aria-current="page" href="user"><span class="oi oi-plus link-success fs-1"></span></a>
+    </nav>
+    @if (_userList.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Tipo</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in _userList)
+                {
+                    <tr>
+                        <td>
+                            <span class="oi oi-list-rich link-success me-lg-3 fs-4" @onclick="() => MyBills(user.Id)" />
+                            <span class="oi oi-pencil link-info me-lg-3 fs-4" @onclick="() => EditUser(user.Id)" />
+                            <span class="oi oi-x link-danger me-lg-3 fs-4" @onclick="() => ConfirmDeleteUser(user.Id)" />
+                        </td>
+                        <td>@user.Name</td>
+                        <td><UserTypeComponent UserType="user.UserType" /></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+<ConfirmModalComponent Title="Excluir usuário" Message="Confirma a exclusão do usuário?" @ref="_confirmDeleteUser" />

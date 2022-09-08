@@ -1,0 +1,68 @@
+﻿@inherits BasePage
+@page "/bill_list"
+@page "/bill_list/user/{user_id:guid}"
+@using Edge.Bills.Blazor.Components.Bill
+@using Edge.Bills.Shared.Helpers
+
+<PageTitle>Contas</PageTitle>
+
+@if (_userListLoaded && _billListLoaded)
+{
+    <div class="container-sm">
+        <label for="selected-user" class="form-label">Usuário</label>
+        <select class="form-select" id="selected-user" aria-label="Floating label select example" @onchange="OnChangeSelectedUser">
+            <option value="@Guid.Empty" selected="@(user_id == null)"></option>
+            @foreach (var user in _userList)
+            {
+                <option value="@user.Id" selected="@(user_id == user.Id)">@user.Name</option>
+            }
+        </select>
+    </div>
+    <AuthorizeView Policy="@BillsPoliciesHelper.POLICIES.MANAGE_BILL">
+        <Authorized>
+            <nav class="nav nav-pills flex-column flex-sm-row">
+                <a class="nav-link" aria-current="page" @onclick="New"><span class="oi oi-plus link-success fs-1"></span></a>
+            </nav>
+        </Authorized>
+    </AuthorizeView>
+    @if (_billList.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Valor</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Usuário</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var bill in _billList)
+                {
+                    <tr>
+                        <td>
+                            <AuthorizeView Policy="@BillsPoliciesHelper.POLICIES.MANAGE_BILL">
+                                <Authorized>
+                                    <span class="oi oi-pencil link-info me-lg-3 fs-4" @onclick="() => EditBill(bill.Id)" />
+                                    <span class="oi oi-x link-danger me-lg-3 fs-4" />
+                                </Authorized>
+                                <NotAuthorized>
+                                    <span class="oi oi-magnifying-glass link-info me-lg-3 fs-4" @onclick="() => EditBill(bill.Id)" />
+                                </NotAuthorized>
+                            </AuthorizeView>
+                        </td>
+                        <td>@bill.Name</td>
+                        <td>@bill.Value.ToString("C2")</td>
+                        <td><BillStatusComponent Status="@bill.Status" /></td>
+                        <td>@bill.UserName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+else
+{
+    <span>Carregando...</span>
+}

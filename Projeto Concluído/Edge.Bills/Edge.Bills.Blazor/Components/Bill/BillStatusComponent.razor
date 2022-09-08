@@ -1,0 +1,14 @@
+﻿@using Bills.Shared.Enums
+
+@if (Status == EBillStatus.Paid)
+{
+    <span class="badge bg-success">Paga</span>    
+}
+else if (Status == EBillStatus.Canceled)
+{
+    <span class="badge bg-danger">Cancelada</span>
+}
+else
+{
+    <span class="badge bg-warning">Em Aberto</span>
+}

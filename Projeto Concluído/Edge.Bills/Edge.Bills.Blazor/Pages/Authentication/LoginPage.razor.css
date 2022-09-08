@@ -1,0 +1,18 @@
+﻿.login-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+.login-panel {
+    position: relative;
+    max-width: 320px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+    .login-panel img {
+        max-width: 50%;
+    }

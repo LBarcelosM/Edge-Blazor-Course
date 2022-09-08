@@ -1,0 +1,33 @@
+﻿@inherits BasePage
+@page "/user"
+@page "/user/{id:guid}"
+@using Edge.Bills.Shared.Enums
+
+<PageTitle>Detalhes do Usuário</PageTitle>
+
+<div class="form-floating mb-3">
+    <input type="text" class="form-control" id="floatingName" placeholder="Nome" @bind-value="_viewModel.Name" />
+    <label for="floatingName">Nome</label>
+</div>
+
+<div class="form-floating mb-3">
+    <input type="email" class="form-control" id="floatingEmail" placeholder="email@email.com" @bind-value="_viewModel.Email" />
+    <label for="floatingEmail">Email</label>
+</div>
+
+<div class="form-floating mb-3">
+    <input type="password" class="form-control" id="floatingPassword" placeholder="Senha" @bind-value="_viewModel.Password">
+    <label for="floatingPassword">Senha</label>
+</div>
+
+<div class="form-floating mb-3">
+    <select class="form-select" id="floatingUserType" aria-label="Floating label select example" @onchange="OnChangeUserType">
+        <option value="@EUserType.Administrator" selected="@(_viewModel.UserType == EUserType.Administrator)">Administrador</option>
+        <option value="@EUserType.Visualizer" selected="@(_viewModel.UserType == EUserType.Visualizer)">Visualizador</option>
+    </select>
+    <label for="floatingUserType">Tipo de Usuário</label>
+</div>
+<div>
+    <button type="button" class="btn btn-danger me-3" @onclick="OnCancel">Cancelar</button>
+    <button type="button" class="btn btn-success" @onclick="OnSave">Salvar</button>
+</div>

@@ -1,0 +1,90 @@
+﻿@inherits BasePage
+@page "/bill"
+@page "/bill/{id:long}"
+@page "/bill/user/{user_id:guid}"
+@using Edge.Bills.Shared.Helpers
+@using Edge.Bills.Shared.Enums
+<PageTitle>Detalhes da conta</PageTitle>
+
+@if (_userListLoaded)
+{
+    <div class="form-floating mb-3">
+        <AuthorizeView Policy="@BillsPoliciesHelper.POLICIES.MANAGE_BILL">
+            <Authorized>
+                <select id="floatingUser" class="form-control" @onchange="OnChangeSelectedUser">
+                    <option value="@Guid.Empty" selected="@(_viewModel.UserId == Guid.Empty)"></option>
+                    @foreach (var user in _userList)
+                    {
+                        <option value="@user.Id" selected="@(_viewModel.UserId == user.Id)">@user.Name</option>
+                    }
+                </select>
+            </Authorized>
+            <NotAuthorized>
+                <select id="floatingUser" class="form-control" @onchange="OnChangeSelectedUser" disabled="disabled">
+                    <option value="@Guid.Empty" selected="@(_viewModel.UserId == Guid.Empty)"></option>
+                    @foreach (var user in _userList)
+                    {
+                        <option value="@user.Id" selected="@(_viewModel.UserId == user.Id)">@user.Name</option>
+                    }
+                </select>
+            </NotAuthorized>
+        </AuthorizeView>
+        <label for="floatingUser">Usuário</label>
+    </div>
+    <div class="form-floating mb-3">
+        <AuthorizeView Policy="@BillsPoliciesHelper.POLICIES.MANAGE_BILL">
+            <Authorized>
+                <input type="text" class="form-control" id="floatingName" placeholder="Nome" @bind-value="_viewModel.Name" />
+            </Authorized>
+            <NotAuthorized>
+                <input type="text" class="form-control" id="floatingName" placeholder="Nome" @bind-value="_viewModel.Name" disabled="disabled" />
+            </NotAuthorized>
+        </AuthorizeView>
+        <label for="floatingName">Nome</label>
+    </div>
+    <div class="form-floating mb-3">
+        <AuthorizeView Policy="@BillsPoliciesHelper.POLICIES.MANAGE_BILL">
+            <Authorized>
+                <input type="number" class="form-control" id="floatingValue" placeholder="Valor" @bind-value="_viewModel.Value" />
+            </Authorized>
+            <NotAuthorized>
+                <input type="number" class="form-control" id="floatingValue" placeholder="Valor" @bind-value="_viewModel.Value" disabled="disabled" />
+            </NotAuthorized>
+        </AuthorizeView>
+        <label for="floatingValue">Valor</label>
+    </div>
+    <div class="form-floating mb-3">
+        <AuthorizeView Policy="@BillsPoliciesHelper.POLICIES.MANAGE_BILL">
+            <Authorized>
+                <select class="form-select" id="floatingStatus" aria-label="" @onchange="OnChangeStatus">
+                    <option value="@EBillStatus.Open" selected="@(_viewModel.Status == EBillStatus.Open)">Em Aberto</option>
+                    <option value="@EBillStatus.Paid" selected="@(_viewModel.Status == EBillStatus.Paid)">Paga</option>
+                    <option value="@EBillStatus.Canceled" selected="@(_viewModel.Status == EBillStatus.Canceled)">Cancelada</option>
+                </select>
+            </Authorized>
+            <NotAuthorized>
+                <select class="form-select" id="floatingStatus" aria-label="" @onchange="OnChangeStatus" disabled="disabled">
+                    <option value="@EBillStatus.Open" selected="@(_viewModel.Status == EBillStatus.Open)">Em Aberto</option>
+                    <option value="@EBillStatus.Paid" selected="@(_viewModel.Status == EBillStatus.Paid)">Paga</option>
+                    <option value="@EBillStatus.Canceled" selected="@(_viewModel.Status == EBillStatus.Canceled)">Cancelada</option>
+                </select>
+            </NotAuthorized>
+        </AuthorizeView>
+        <label for="floatingStatus">Status</label>
+    </div>
+    <div>
+        <AuthorizeView Policy="@BillsPoliciesHelper.POLICIES.MANAGE_BILL">
+            <Authorized>
+                <button type="button" class="btn btn-danger me-3" @onclick="OnCancel">Cancelar</button>
+                <button type="button" class="btn btn-success" @onclick="OnSave">Salvar</button>
+            </Authorized>
+            <NotAuthorized>
+                <button type="button" class="btn btn-secondary me-3" @onclick="ReturnToList">Voltar</button>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+}
+else
+{
+    <span>Carregando...</span>
+}
